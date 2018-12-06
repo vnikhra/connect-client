@@ -9,7 +9,7 @@ import ApolloClient from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 
 const httpLink = new HttpLink({
-  uri: "http://localhost:3000"
+  uri: "http://localhost:4000"
 });
 
 const cache = new InMemoryCache();
