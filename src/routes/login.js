@@ -1,7 +1,14 @@
 import React from "react";
 import { extendObservable } from "mobx";
 import { observer } from "mobx-react";
-import { Button, Container, Header, Input } from "semantic-ui-react";
+import {
+  Form,
+  Button,
+  Container,
+  Header,
+  Input,
+  Message
+} from "semantic-ui-react";
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
 
@@ -10,11 +17,15 @@ class Login extends React.Component {
     super(props);
     extendObservable(this, {
       email: "",
-      password: ""
+      password: "",
+      errors: []
     });
   }
 
-  onChange = e => (this[e.target.name] = e.target.value);
+  onChange = e => {
+    this[e.target.name] = e.target.value;
+    this.errors = [];
+  };
 
   onSubmit = async () => {
     const { email, password } = this;
@@ -22,33 +33,53 @@ class Login extends React.Component {
       variables: { email, password }
     });
     console.log(response);
-    const { ok, token, refreshToken } = response.data.login;
+    const { ok, token, refreshToken, errors } = response.data.login;
     if (ok) {
       localStorage.setItem("token", token);
       localStorage.setItem("refreshToken", refreshToken);
+      this.props.history.push("/");
+    } else {
+      const err = [];
+      errors.forEach(({ path, message }) => {
+        err.push(message);
+      });
+      this.errors = err;
     }
   };
   render() {
-    const { email, password } = this;
+    const { email, password, errors } = this;
     return (
       <Container text>
         <Header as={"h2"}>Login</Header>
-        <Input
-          name={"email"}
-          onChange={this.onChange}
-          placeholder={"email"}
-          fluid
-          value={email}
-        />
-        <Input
-          name={"password"}
-          onChange={this.onChange}
-          type={"password"}
-          placeholder={"password"}
-          fluid
-          value={password}
-        />
-        <Button onClick={this.onSubmit}> Submit </Button>
+        <Form>
+          <Form.Field error={this.errors.length > 0}>
+            <Input
+              name={"email"}
+              onChange={this.onChange}
+              placeholder={"email"}
+              fluid
+              value={email}
+            />
+          </Form.Field>
+          <Form.Field error={this.errors.length > 0}>
+            <Input
+              name={"password"}
+              onChange={this.onChange}
+              type={"password"}
+              placeholder={"password"}
+              fluid
+              value={password}
+            />
+          </Form.Field>
+          <Button onClick={this.onSubmit}> Submit </Button>
+        </Form>
+        {this.errors.length > 0 ? (
+          <Message
+            error
+            header="There were some errors while logging in"
+            list={errors}
+          />
+        ) : null}
       </Container>
     );
   }

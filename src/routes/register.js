@@ -1,5 +1,12 @@
 import React from "react";
-import { Container, Input, Header, Button, Message } from "semantic-ui-react";
+import {
+  Container,
+  Input,
+  Header,
+  Button,
+  Message,
+  Form
+} from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
@@ -53,42 +60,48 @@ class Register extends React.Component {
     return (
       <Container text>
         <Header as={"h2"}>Register</Header>
-        <Input
-          error={!!usernameError}
-          name={"username"}
-          onChange={this.onChange}
-          placeholder={"username"}
-          fluid
-          value={username}
-        />
-        <Input
-          error={!!emailError}
-          name={"email"}
-          onChange={this.onChange}
-          placeholder={"email"}
-          fluid
-          value={email}
-        />
-        <Input
-          error={!!passwordError}
-          name={"password"}
-          onChange={this.onChange}
-          type={"password"}
-          placeholder={"password"}
-          fluid
-          value={password}
-        />
-        <Button onClick={this.onSubmit}> Submit </Button>
-          {usernameError || emailError || passwordError ? (
-              <Message
-              error
-              header = "There was some errors with your submission"
-              list={[
-                  usernameError ? usernameError : null,
-                  emailError ? emailError : null,
-                  passwordError ? passwordError : null
-              ]}/>
-          ): null}
+        <Form>
+          <Form.Field error={!!usernameError}>
+            <Input
+              name={"username"}
+              onChange={this.onChange}
+              placeholder={"username"}
+              fluid
+              value={username}
+            />
+          </Form.Field>
+          <Form.Field error={!!emailError}>
+            <Input
+              name={"email"}
+              onChange={this.onChange}
+              placeholder={"email"}
+              fluid
+              value={email}
+            />
+          </Form.Field>
+          <Form.Field error={!!passwordError}>
+            <Input
+              name={"password"}
+              onChange={this.onChange}
+              type={"password"}
+              placeholder={"password"}
+              fluid
+              value={password}
+            />
+          </Form.Field>
+          <Button onClick={this.onSubmit}> Submit </Button>
+        </Form>
+        {usernameError || emailError || passwordError ? (
+          <Message
+            error
+            header="There were some errors with your submission"
+            list={[
+              usernameError ? usernameError : null,
+              emailError ? emailError : null,
+              passwordError ? passwordError : null
+            ]}
+          />
+        ) : null}
       </Container>
     );
   }
