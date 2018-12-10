@@ -1,19 +1,42 @@
-import React from 'react'
+import React from "react";
 import Styled from "styled-components";
 
-const TeamWrapper =  Styled.div`
+const TeamWrapper = Styled.div`
   grid-column: 1;
   grid-row: 1/4;
   background-color: #362234;
   color: #958993;
 `;
 
-const team = ({ id, name }) => <li key={`team-${id}`}>{name}</li>;
+const TeamList = Styled.ul`
+  width: 100%;
+  padding-left: 0px;
+  list-style: none;
+`;
 
-export default ({teams}) => (
+const TeamListItem = Styled.li`
+  height: 50px;
+  width: 50px;
+  background-color: #676066;
+  color: #fff;
+  margin: auto;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border-radius: 11px;
+  &:hover{
+    border-style: solid;
+    border-width: thick;
+    border-color: #767676;
+  }
+`;
+
+const team = ({ id, name }) => <TeamListItem key={`team-${id}`}>{name}</TeamListItem>;
+
+export default ({ teams }) => (
   <TeamWrapper>
-    <ul>
-      {teams.map(team)}
-    </ul>
+    <TeamList>{teams.map(team)}</TeamList>
   </TeamWrapper>
 );

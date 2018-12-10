@@ -23,7 +23,7 @@ export default () => (
     <Channels
       teamname={"Team Name"}
       username={"User Name"}
-      channels={[{ id: 1, name: "general" }, { id: 1, name: "general" }]}
+      channels={[{ id: 1, name: "general" }, { id: 1, name: "announcements" }]}
       users={[
         {
           id: 1,
@@ -35,13 +35,13 @@ export default () => (
         }
       ]}
     />
-    <Header channelName={"general"}/>
+    <Header channelName={"general"} />
     <Messages>
       <ul className="message-list">
         <li />
         <li />
       </ul>
     </Messages>
-    <SendMessage channelName={"general"}/>
+    <SendMessage channelName={"general"} />
   </AppLayout>
 );
