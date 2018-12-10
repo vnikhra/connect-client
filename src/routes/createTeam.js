@@ -27,21 +27,26 @@ class CreateTeam extends React.Component {
   };
 
   onSubmit = async () => {
+    const err = [];
     const { name } = this;
-    const response = await this.props.mutate({
-      variables: { name }
-    });
-    console.log(response);
-    const { ok, errors } = response.data.createTeam;
-    if (ok) {
-      this.props.history.push("/");
-    } else {
-      const err = [];
-      errors.forEach(({ path, message }) => {
-        err.push(message);
+    try {
+      const response = await this.props.mutate({
+        variables: { name }
       });
-      this.errors = err;
+
+      console.log(response);
+      const { ok, errors } = response.data.createTeam;
+      if (ok) {
+        this.props.history.push("/");
+      } else {
+        errors.forEach(({ path, message }) => {
+          err.push(message);
+        });
+      }
+    } catch (e) {
+      err.push("You need to be logged in to create team.");
     }
+    this.errors = err;
   };
   render() {
     const { name, errors } = this;
@@ -73,15 +78,15 @@ class CreateTeam extends React.Component {
 }
 
 const createTeamMutation = gql`
-    mutation($name: String!) {
-        createTeam(name: $name) {
-            ok
-            errors {
-                path
-                message
-            }
-        }
+  mutation($name: String!) {
+    createTeam(name: $name) {
+      ok
+      errors {
+        path
+        message
+      }
     }
+  }
 `;
 
 export default graphql(createTeamMutation)(observer(CreateTeam));
