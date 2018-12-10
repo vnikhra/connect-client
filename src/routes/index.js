@@ -4,6 +4,7 @@ import Home from "./home";
 import Register from "./register";
 import Login from "./login";
 import CreateTeam from "./createTeam";
+import ViewTeam from "./viewTeam";
 import decode from "jwt-decode";
 
 const isAuthenticated = () => {
@@ -43,6 +44,7 @@ export default () => (
       <Route path="/register" exact component={Register} />
       <Route path="/login" exact component={Login} />
       <PrivateRoute path="/create-team" exact component={CreateTeam} />
+      <Route path='/view-team' exact component={ViewTeam}/>
     </Switch>
   </BrowserRouter>
 );
