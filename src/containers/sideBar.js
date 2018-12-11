@@ -3,13 +3,12 @@ import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 import Teams from "../components/teams";
 import Channels from "../components/channels";
-import _ from "lodash";
+import findIndex from "lodash/findIndex";
 import decode from "jwt-decode";
 
 const SideBar = ({ data: { loading, allTeams }, currentTeam }) => {
   if (loading) return null;
-
-  const teamIdx = _.findIndex(allTeams, ["id", currentTeam]);
+  const teamIdx = currentTeam ? findIndex(allTeams, ["id", parseInt(currentTeam, 10)]) : 0;
   const team = allTeams[teamIdx];
   let username = "";
   try {

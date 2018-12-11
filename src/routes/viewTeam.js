@@ -5,9 +5,9 @@ import SendMessage from "../components/sendMessage";
 import Header from "../components/header";
 import AppLayout from "../components/appLayout";
 
-export default () => (
+export default ({ match: {params}}) => (
   <AppLayout>
-    <SideBar currentTeam={2}/>
+    <SideBar currentTeam={params.teamId}/>
     <Header channelName={"general"} />
     <Messages>
       <ul className="message-list">

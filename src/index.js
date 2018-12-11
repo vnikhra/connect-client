@@ -6,7 +6,6 @@ import { HttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
 import ApolloClient from "apollo-client";
 import { ApolloLink } from "apollo-link";
-
 import { InMemoryCache } from "apollo-cache-inmemory";
 
 const httpLink = new HttpLink({
