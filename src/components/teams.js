@@ -35,7 +35,7 @@ const TeamListItem = Styled.li`
 `;
 
 const team = ({ id, name }) => (
-  <Link to={"/view-team/" + id}>
+  <Link key={`link-team-${id}`} to={"/view-team/" + id}>
     <TeamListItem key={`team-${id}`}>{name}</TeamListItem>
   </Link>
 );
