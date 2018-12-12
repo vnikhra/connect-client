@@ -58,12 +58,12 @@ export default compose(
     mapPropsToValues: () => ({ name: "" }),
     handleSubmit: async (
       values,
-      { props: { teamId, mutate }, setSubmitting }
+      { props: { onClose, team, mutate }, setSubmitting }
     ) => {
-      const response = await mutate({
-        variables: { teamId, name: values.name }
+      await mutate({
+        variables: { teamId: team, name: values.name }
       });
-      console.log(response);
+      onClose();
       setSubmitting(false);
     }
   })
