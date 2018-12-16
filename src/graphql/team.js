@@ -4,6 +4,7 @@ export const allTeamsQuery = gql`
     {
         allTeams {
             id
+            owner
             name
             channels {
                 id
@@ -12,6 +13,7 @@ export const allTeamsQuery = gql`
         }
         invitedTeams {
             id
+            owner
             name
             channels {
                 id

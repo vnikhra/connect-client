@@ -11,24 +11,26 @@ export default class SideBar extends React.Component {
     openInvitePeopleModal: false
   };
 
-  handleChannelClick = (e) => {
+  handleChannelClick = e => {
     if (e) e.preventDefault();
     this.setState({ openAddChannelModal: !this.state.openAddChannelModal });
   };
 
-  handleInvitePeopleClick = (e) => {
+  handleInvitePeopleClick = e => {
     if (e) e.preventDefault();
     this.setState({ openInvitePeopleModal: !this.state.openInvitePeopleModal });
   };
 
   render() {
-    const {openAddChannelModal, openInvitePeopleModal} = this.state;
+    const { openAddChannelModal, openInvitePeopleModal } = this.state;
     const { teams, team, teamIdx } = this.props;
     let username = "";
+    let isOwner = false;
     try {
       const token = localStorage.getItem("token");
       const { user } = decode(token);
       username = user.username;
+      isOwner = team.owner === user.id;
     } catch (err) {}
 
     return [
@@ -41,6 +43,7 @@ export default class SideBar extends React.Component {
         channels={team.channels}
         onAddChannelClick={this.handleChannelClick}
         onInvitePeople={this.handleInvitePeopleClick}
+        isOwner={isOwner}
         users={[
           {
             id: 1,
