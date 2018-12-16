@@ -7,6 +7,7 @@ import AppLayout from "../components/appLayout";
 import { graphql } from "react-apollo";
 import { allTeamsQuery } from "../graphql/team";
 import findIndex from "lodash/findIndex";
+import { Redirect } from "react-router-dom";
 
 const ViewTeam = ({
   data: { loading, allTeams },
@@ -15,6 +16,10 @@ const ViewTeam = ({
   }
 }) => {
   if (loading) return null;
+
+  if (!allTeams.length) {
+    return <Redirect to={"/create-team"} />;
+  }
   const teamIdx = !!teamId
     ? findIndex(allTeams, ["id", parseInt(teamId, 10)])
     : 0;
