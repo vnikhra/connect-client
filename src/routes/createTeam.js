@@ -17,44 +17,58 @@ class CreateTeam extends React.Component {
     super(props);
     extendObservable(this, {
       name: "",
-      errors: []
+      errors: {}
     });
   }
 
   onChange = e => {
     this[e.target.name] = e.target.value;
-    this.errors = [];
+    this.errors = {};
   };
 
   onSubmit = async () => {
-    const err = [];
     const { name } = this;
+    let response = null;
+
     try {
-      const response = await this.props.mutate({
+      response = await this.props.mutate({
         variables: { name }
       });
-
-      console.log(response);
-      const { ok, team: {id}, errors } = response.data.createTeam;
-      if (ok) {
-        this.props.history.push("/view-team/"+id);
-      } else {
-        errors.forEach(({ path, message }) => {
-          err.push(message);
-        });
-      }
-    } catch (e) {
-      err.push("You need to be logged in to create team.");
+    } catch (err) {
+      this.props.history.push("/login");
+      return;
     }
-    this.errors = err;
+
+    console.log(response);
+    const { ok, team, errors } = response.data.createTeam;
+    if (ok) {
+      this.props.history.push("/view-team/" + team.id);
+    } else {
+      const err = {};
+      errors.forEach(({ path, message }) => {
+        if (`${path}Error` in err) {
+          err[`${path}Error`].push(message);
+        }else{
+          err[`${path}Error`] = message;
+        }
+      });
+      this.errors = err;
+    }
   };
   render() {
-    const { name, errors } = this;
+    const {
+      name,
+      errors: { nameError }
+    } = this;
+    const errorList = [];
+    if (nameError) {
+      errorList.push(nameError);
+    }
     return (
       <Container text>
         <Header as={"h2"}>Create Team</Header>
         <Form>
-          <Form.Field error={this.errors.length > 0}>
+          <Form.Field error={nameError && nameError.length > 0}>
             <Input
               name={"name"}
               onChange={this.onChange}
@@ -65,11 +79,11 @@ class CreateTeam extends React.Component {
           </Form.Field>
           <Button onClick={this.onSubmit}> Submit </Button>
         </Form>
-        {this.errors.length > 0 ? (
+        {errorList.length ? (
           <Message
             error
             header="There were some errors while creating team"
-            list={errors}
+            list={errorList}
           />
         ) : null}
       </Container>
