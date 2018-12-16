@@ -6,7 +6,6 @@ import { Comment } from "semantic-ui-react";
 
 const messageContainer = ({ data: { loading, messages } }) => {
   if (loading) return null;
-  console.log(messages);
   return (
     <Messages>
       <Comment.Group>
