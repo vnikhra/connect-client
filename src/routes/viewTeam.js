@@ -10,33 +10,33 @@ import findIndex from "lodash/findIndex";
 import { Redirect } from "react-router-dom";
 
 const ViewTeam = ({
-  data: { loading, allTeams },
+  data: { loading, allTeams, invitedTeams },
   match: {
     params: { teamId, channelId }
   }
 }) => {
   if (loading) return null;
-
-  if (!allTeams.length) {
+  const teams = [...allTeams, ...invitedTeams];
+  if (!teams.length) {
     return <Redirect to={"/create-team"} />;
   }
   const teamIdInteger =  parseInt(teamId, 10);
   const channelIdInteger =  parseInt(channelId, 10);
 
   const teamIdx = !!teamIdInteger
-    ? findIndex(allTeams, ["id", teamIdInteger])
+    ? findIndex(teams, ["id", teamIdInteger])
     : 0;
-  const team = allTeams[teamIdx];
+  const team = teamIdx === -1 ? teams[0]: teams[teamIdx];
 
   const channelIdx = !!channelId
     ? findIndex(team.channels, ["id", channelIdInteger])
     : 0;
-  const channel = team.channels[channelIdx];
+  const channel = channelIdx === -1 ? team.channels[0] : team.channels[channelIdx];
 
   return (
     <AppLayout>
       <SideBar
-        teams={allTeams.map(t => ({
+        teams={teams.map(t => ({
           id: t.id,
           name: t.name.charAt(0).toUpperCase()
         }))}
