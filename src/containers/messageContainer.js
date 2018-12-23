@@ -5,14 +5,28 @@ import { graphql } from "react-apollo";
 import { Comment } from "semantic-ui-react";
 
 class messageContainer extends React.Component {
-  componentWillUpdate() {
+  componentWillMount() {
+    this.unsubscribe = this.subscribeToChannel(this.props.channelId);
+  }
+
+  componentWillReceiveProps({ channelId }) {
+    if (this.props.channelId !== channelId) {
+      if (this.unsubscribe) this.unsubscribe();
+      this.unsubscribe = this.subscribeToChannel(channelId);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribe) this.unsubscribe();
+  }
+
+  subscribeToChannel = channelId =>
     this.props.data.subscribeToMore({
       document: newChannelMessageSubsription,
       variables: {
-        channelId: this.props.channelId
+        channelId
       },
       updateQuery: (prev, { subscriptionData }) => {
-        console.log(prev, subscriptionData);
         if (!subscriptionData) {
           return prev;
         }
@@ -23,7 +37,6 @@ class messageContainer extends React.Component {
         };
       }
     });
-  }
 
   render() {
     const {
@@ -83,5 +96,8 @@ const newChannelMessageSubsription = gql`
 export default graphql(messagesQuery, {
   variables: ({ channelId }) => ({
     channelId
-  })
+  }),
+  options: {
+    fetchPolicy: "network-only"
+  }
 })(messageContainer);
